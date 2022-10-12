@@ -8,10 +8,8 @@
       pkgs = nixpkgs.legacyPackages.${system};
 
       hostCpuTargets = [
-        "aarch64-softmmu"
         "riscv32-softmmu"
         "riscv64-softmmu"
-        "x86_64-softmmu"
       ];
       version = "0.1.0";
 
@@ -21,6 +19,7 @@
         inherit (pkgs.darwin) sigtool;
         inherit hostCpuTargets version;
         src = self;
+        # stdenv = pkgs.clangStdenv;
       };
 
     in {
