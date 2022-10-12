@@ -157,7 +157,7 @@ stdenv.mkDerivation rec {
 
   dontUseMesonConfigure = true; # meson's configurePhase isn't compatible with qemu build
 
-  outputs = ["out"] ++ lib.optional guestAgentSupport "ga";
+  outputs = ["out" "plugins"] ++ lib.optional guestAgentSupport "ga";
   # On aarch64-linux we would shoot over the Hydra's 2G output limit.
   separateDebugInfo = !(stdenv.isAarch64 && stdenv.isLinux);
 
@@ -268,6 +268,12 @@ stdenv.mkDerivation rec {
     '';
   preBuild = "cd build";
 
+  postBuild = ''
+    pushd contrib/plugins
+    make -j$NIX_BUILD_CORES
+    popd
+  '';
+
   # tests can still timeout on slower systems
   inherit doCheck;
   checkInputs = [socat];
@@ -308,6 +314,10 @@ stdenv.mkDerivation rec {
   postInstall = ''
     ln -s $out/libexec/virtiofsd $out/bin
     ln -s $out/bin/qemu-system-${stdenv.hostPlatform.qemuArch} $out/bin/qemu-kvm
+
+    # Add the plugins to their own output.
+    mkdir -p $plugins/lib
+    cp contrib/plugins/*.so $plugins/lib/
   '';
 
   passthru = {
@@ -316,9 +326,6 @@ stdenv.mkDerivation rec {
       qemu-tests = qemu.override {doCheck = true;};
     };
   };
-
-  # Builds in ~3h with 2 cores, and ~20m with a big-parallel builder.
-  requiredSystemFeatures = ["big-parallel"];
 
   meta = with lib; {
     homepage = "http://www.qemu.org/";
