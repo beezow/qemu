@@ -13,6 +13,7 @@
         "riscv64-softmmu"
         "x86_64-softmmu"
       ];
+      version = "0.1.0";
 
       qemu = pkgs.callPackage ./nix {
         inherit (pkgs.darwin.apple_sdk.frameworks) CoreServices Cocoa Hypervisor;

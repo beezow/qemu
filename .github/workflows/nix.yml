@@ -10,7 +10,7 @@ jobs:
       with:
         extra_nix_config: |
           access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
-    - run: nix flake check
+    - run: nix flake check '.?submodules=1'
   darwin-checks:
     runs-on: macOS-latest
     steps:
@@ -19,5 +19,5 @@ jobs:
       with:
         extra_nix_config: |
           access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
-    - run: nix flake check
+    - run: nix flake check '.?submodules=1'
 
