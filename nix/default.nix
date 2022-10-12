@@ -211,6 +211,7 @@ stdenv.mkDerivation rec {
       "--disable-strip" # We'll strip ourselves after separating debug info.
       "--enable-docs"
       "--enable-tools"
+      "--enable-plugins"
       "--localstatedir=/var"
       "--sysconfdir=/etc"
       # Always use our Meson, not the bundled version, which doesn't
