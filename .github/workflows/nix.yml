@@ -1,6 +1,5 @@
 name: "Nix flake checks"
 on:
-  pull_request:
   push:
 jobs:
   linux-checks:

@@ -7,10 +7,19 @@
     flake-utils.lib.eachDefaultSystem (system: let
       pkgs = nixpkgs.legacyPackages.${system};
 
+      hostCpuTargets = [
+        "aarch64-softmmu"
+        "riscv32-softmmu"
+        "riscv64-softmmu"
+        "x86_64-softmmu"
+      ];
+
       qemu = pkgs.callPackage ./nix {
         inherit (pkgs.darwin.apple_sdk.frameworks) CoreServices Cocoa Hypervisor;
         inherit (pkgs.darwin.stubs) rez setfile;
         inherit (pkgs.darwin) sigtool;
+        inherit hostCpuTargets version;
+        src = self;
       };
 
     in {

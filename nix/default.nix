@@ -34,19 +34,17 @@
 , nixosTestRunner ? false
 , doCheck ? false
 , qemu  # for passthru.tests
+, src
+, version
 }:
 
 stdenv.mkDerivation rec {
+  inherit src version;
+
   pname = "qemu"
     + lib.optionalString xenSupport "-xen"
     + lib.optionalString hostCpuOnly "-host-cpu-only"
     + lib.optionalString nixosTestRunner "-for-vm-tests";
-  version = "7.1.0";
-
-  src = fetchurl {
-    url = "https://download.qemu.org/qemu-${version}.tar.xz";
-    sha256 = "1rmvrgqjhrvcmchnz170dxvrrf14n6nm39y8ivrprmfydd9lwqx0";
-  };
 
   depsBuildBuild = [ buildPackages.stdenv.cc ];
 
